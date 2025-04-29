@@ -3,8 +3,7 @@
 <p align="center">
   <img alt="TensorFlow" src="https://img.shields.io/badge/Made%20with-TensorFlow-orange?style=for-the-badge&logo=tensorflow" />
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
-  <img alt="Challenge" src="https://img.shields.io/badge/Challenge-BirdCLEF%202025-blueviolet?style=for-the-badge" />
-  <img alt="Status" src="https://img.shields.io/badge/Status-Active-blue?style=for-the-badge" />
+  <img alt="DataSet" src="https://img.shields.io/badge/Challenge-BirdCLEF%202025-blueviolet?style=for-the-badge" />
 </p>
 
 ---
@@ -17,7 +16,7 @@ It combines **CNNs**, **Channel Attention**, and **Transformer Encoders** for ef
 This work is part of our upcoming research:  
 **_"WildNet: A Hybrid CNN-Attention-Transformer Architecture for Wildlife Audio Classification"_**
 
-The full draft of the research paper is available `Draft.pdf`.
+The full draft of the research paper is available `  draft.pdf  `.
 
 The model is currently optimized for the **BirdCLEF 2025** dataset but is **generalizable** to other spectrogram-based audio classification tasks.
 
