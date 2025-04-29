@@ -56,7 +56,7 @@ The model is currently optimized for the **BirdCLEF 2025** dataset but is **gene
 ⚙️ Installation
 ---------------
 
-`   git clone https://github.com/yourusername/WildNet.git  cd WildNet  pip install -r requirements.txt   `
+`   git clone https://github.com/HuzyafaK/WildNet.git  cd WildNet  pip install -r requirements.txt   `
 
 📆 Requirements
 ---------------
