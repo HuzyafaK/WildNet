@@ -104,6 +104,12 @@ Generate Mel-Spectrograms from audio files:
 
 `   python evaluate.py   `
 
+### Run Inference
+To get predictions on a new audio file, simply run:
+
+`   Inference.py   `
+
+
 📈 Evaluation Metrics
 ---------------------
 
