@@ -1,0 +1,8 @@
+tensorflow>=2.10
+scikit-learn
+scikit-multilearn
+librosa
+numpy
+soundfile
+pandas
+tqdm
