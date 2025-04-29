@@ -145,8 +145,7 @@ To get predictions on a new audio file, simply run:
 
 
 `WildNet/  │  
-├── data/                     # Raw audio, labels, metadata  
-├── spectrograms/              # Generated Mel-spectrogram images 
+├── data/                     # Raw audio, labels, metadata               
 ├── models/                    # Model components  
 |  ├── cnn_backbone.py    
 |  ├── attention_module.py    
@@ -156,6 +155,8 @@ To get predictions on a new audio file, simply run:
 ├── evaluate.py                # Evaluation and metrics 
 ├── preprocess.py              # Audio preprocessing (audio → spectrograms) 
 ├── utils.py                   # Utilities (stratified split, plotting, etc.) 
+├── model.keras
+├── inference.py
 ├── requirements.txt           # Python dependencies  
 └── README.md                  # This documentation   `
 
