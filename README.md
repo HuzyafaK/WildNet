@@ -3,7 +3,7 @@
 <p align="center">
   <img alt="TensorFlow" src="https://img.shields.io/badge/Made%20with-TensorFlow-orange?style=for-the-badge&logo=tensorflow" />
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
-  <img alt="DataSet" src="https://img.shields.io/badge/Challenge-BirdCLEF%202025-blueviolet?style=for-the-badge" />
+  <img alt="DataSet" src="https://img.shields.io/badge/DataSet-BirdCLEF%202025-blueviolet?style=for-the-badge" />
 </p>
 
 ---
