@@ -12,12 +12,12 @@
 **WildNet** is a deep learning model designed for wildlife audio classification, focusing on birds, mammals, and amphibians.  
 It combines **CNNs**, **Channel Attention**, and **Transformer Encoders** for effective multi-label classification of species-specific vocalizations.
 
-This work is part of our upcoming research:  
+This work is described in an internal draft:  
 **_"WildNet: A Hybrid CNN-Attention-Transformer Architecture for Wildlife Audio Classification"_**
 
-The full draft of the research paper is available `  draft.pdf  `.
+The full draft is available `  draft.pdf  `.
 
-The model is currently optimized for the **BirdCLEF 2025** dataset but is **generalizable** to other spectrogram-based audio classification tasks.
+The model is currently optimized for the **BirdCLEF 2025** dataset but is **generalizable** to other spectrogram-based classification tasks.
 
 ---
 
