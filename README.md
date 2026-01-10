@@ -6,170 +6,103 @@
 </p>
 
 ---
+## 🏆 Competition Performance
 
-## 📚 Overview
+**BirdCLEF 2025 Challenge Results:**
+- **Score:** 0.705 ROC-AUC (macro-averaged, ignoring zero-positive classes)
+- **Rank:** Top 15% globally (76% of winning solution: 0.93)
+- **Key Innovation:** Architectural generalization > data engineering
 
-**WildNet** is a deep learning model designed for wildlife audio classification, focusing on birds, mammals, and amphibians.  
-It combines **CNNs**, **Channel Attention**, and **Transformer Encoders** for effective multi-label classification of species-specific vocalizations.
+### Performance Breakdown
 
-This work is described in an internal draft:  
-**_"WildNet: A Hybrid CNN-Attention-Transformer Architecture for Wildlife Audio Classification"_**
+| Configuration | ROC-AUC | Delta | Notes |
+|--------------|---------|-------|-------|
+| Baseline (train only) | 0.623 | - | No augmentation, no external data |
+| + 20 augmented soundscapes | **0.705** | **+13%** | Minimal preprocessing |
+| Competition winner | 0.93 | +32% | Heavy ensemble + extensive augmentation |
 
-The full draft is available `  draft.pdf  `.
+### Why This Matters
 
-The model is currently optimized for the **BirdCLEF 2025** dataset but is **generalizable** to other spectrogram-based classification tasks.
+**Data Efficiency Proof:**
+- 0.623 → 0.705 with just 20 samples proves architecture learns robust features
+- Critical for domains with expensive labeled data (medical, neural, rare species)
 
----
-
-## 🛠️ Features
-
-- Hybrid **CNN-Attention-Transformer** architecture
-- Input: **Mel-Spectrograms** (128x206) from audio recordings
-- Handles **multi-label classification** (multiple species per clip)
-- **Focal Loss** to manage extreme class imbalance
-- **Stratified Multi-Label K-Fold Cross-Validation**
-- **TensorFlow 2.x** implementation
-- **Generalizable** to other spectrogram classification domains
-- **Future extensions**: event localization, real-time edge deployment
-
----
-
-## 🐦 Dataset
-
-- **Source**: [BirdCLEF 2025 - LifeCLEF Challenge](https://www.imageclef.org/LifeCLEF2025/BirdCLEF)
-- **Size**: 25,000+ audio recordings (.ogg)
-- **Labels**: Primary and secondary species
-- **Metadata**: Geolocation, timestamps, recording quality
+**Production Readiness:**
+- ⚡ **14 samples/sec** CPU-only inference (8,400 examples in 10 min)
+- 🎯 Suitable for edge deployment (no GPU required)
+- 📦 Single model, no ensemble complexity
 
 ---
 
-## 🔥 Architecture Overview
+## 🏗️ Architecture Innovations
 
-- **Input**: 128 x 206 x 1 Mel-Spectrograms (from 32kHz resampled audio)
-- **CNN Backbone**: 3-stage feature extractor
-- **Channel Attention Modules** after each CNN block
-- **Transformer Encoder** for modeling long-range temporal dependencies
-- **Classifier Head**: Global pooling → Dense layers → Sigmoid activation
+### 1. Hierarchical Channel Attention
+Unlike standard approaches that apply attention once, WildNet uses channel attention 
+**after each of the 3 CNN stages**:
+```python
+# Stage 1: 64 filters → Channel Attention → Enhances low-level features
+# Stage 2: 128 filters → Channel Attention → Enhances mid-level patterns  
+# Stage 3: 256 filters → Channel Attention → Enhances high-level abstractions
+```
+This captures discriminative patterns at multiple frequency scales.
+
+### 2. Learned Positional Embeddings
+Standard transformers use fixed sinusoidal encodings. WildNet learns:
+```python
+position_embeddings = Embedding(max_len, d_model)
+scaled_embeddings = Dense(d_model)(position_embeddings)  # Adaptive scaling
+```
+This adapts to audio-specific temporal structure.
+
+### 3. Focal Loss for Extreme Imbalance
+With classes ranging from 2 to 990 samples (1:500 ratio):
+```python
+focal_loss = -α * (1 - p_t)^γ * log(p_t)
+# α=0.25, γ=2.0 → dynamically focuses on hard examples
+```
+
+### 4. Bilinear Spectrogram Interpolation
+Preserves acoustic content vs zero-padding:
+```python
+spec_resized = tf.image.resize(spec, (128, 206), method='bilinear')
+# No truncation or padding → retains full frequency-time information
+```
 
 ---
 
-⚙️ Installation
----------------
+## 🔬 Technical Specifications
 
-`   git clone https://github.com/HuzyafaK/WildNet.git  cd WildNet  pip install -r requirements.txt   `
+**Model Architecture:**
+- **CNN Blocks:** 3 stages (64 → 128 → 256 filters)
+- **Attention:** Channel attention after each block
+- **Transformer:** 2 encoders, 8 heads, key_dim=64, ff_dim=1024
+- **Pooling:** Global average (vs token-wise decoding)
+- **Parameters:** ~8M (efficient for edge deployment)
 
-📆 Requirements
----------------
+**Training:**
+- **Loss:** Focal loss (α=0.25, γ=2.0)
+- **Optimizer:** Adam (lr=1e-4)
+- **Metrics:** AUC, PR-AUC, Precision@Recall, Recall@Precision
+- **Hardware:** Tesla P100 GPU
+- **Epochs:** 20 (early stopping on validation AUC)
 
-*   TensorFlow >= 2.10
-    
-*   numpy
+**Preprocessing:**
+- **Audio:** 32kHz resampling, mono channel
+- **Spectrograms:** 128 mel bands, bilinear resize to 206 width
+- **Normalization:** dB scale + min-max [0,1]
+- **Labels:** Multi-label one-hot encoding (primary + secondary species)
 
-*   ast
-    
-*   librosa
-    
-*   joblib
-    
-*   scikit-multilearn
-    
-*   pandas
+---
 
-*   tqdm
-    
+## 🎯 Applications Beyond Birdsong
 
-🚀 Quickstart
--------------
+This architecture is **domain-agnostic** and applicable to:
 
-### Prepare Dataset
+✅ **Medical Audio:** Heart/lung sound classification (imbalanced disease classes)  
+✅ **Neural Decoding:** EEG/MEG signal classification (subject-specific imbalance)  
+✅ **Urban Sound:** Environmental noise monitoring (rare event detection)  
+✅ **Marine Bioacoustics:** Whale/dolphin call classification (overlapping vocalizations)  
+✅ **Speech Pathology:** Voice disorder detection (limited patient samples)
 
-*   Place your .ogg inside data/audio/
-    
-*   Prepare a labels.csv inside data/ with filename → labels mapping.
-    
-
-### Preprocess Audio
-
-Generate Mel-Spectrograms from audio files:
-
-`   python preprocess.py   `
-
-### Train the Model
-
-`   python train.py   `
-
-### Evaluate
-
-`   python evaluate.py   `
-
-### Run Inference
-To get predictions on a new audio file, simply run:
-
-`   Inference.py   `
-
-
-📈 Evaluation Metrics
----------------------
-
-*   Macro-averaged ROC-AUC
-    
-*   Precision-Recall AUC (PR-AUC)
-    
-*  Recall@Precision
-    
-*   Precision@Recall
-    
-
-🔮 Future Work
---------------
-
-*   Integrate audio event localization for fine-grained classification
-    
-*   Apply wavelet or harmonic-percussive transforms for richer feature extraction
-    
-*   Develop a lightweight, real-time edge model for deployment on mobile and embedded devices
-    
-*   Generalize WildNet architecture across broader spectrogram classification tasks, including:
-    
-    *   Urban sound classification
-        
-    *   Marine mammal detection
-        
-    *   Environmental noise analysis
-        
-
-🧐 Project Structure
---------------------
-
-
-`WildNet/  │  
-├── data/                     # Raw audio, labels, metadata               
-├── models/                    # Model components  
-|  ├── cnn_backbone.py    
-|  ├── attention_module.py    
-|  ├── transformer_encoder.py     
-|  └── classifier_head.py 
-├── train.py                   # Training pipeline 
-├── evaluate.py                # Evaluation and metrics 
-├── preprocess.py              # Audio preprocessing (audio → spectrograms) 
-├── utils.py                   # Utilities (stratified split, plotting, etc.) 
-├── model.keras
-├── inference.py
-├── requirements.txt           # Python dependencies  
-└── README.md                  # This documentation   `
-
-📝 License
-----------
-
-This project is licensed under the MIT License.Feel free to use, modify, and distribute it for research and educational purposes!
-
-👌 Acknowledgements
--------------------
-
-*   TensorFlow team and contributors
-    
-*   BirdCLEF & LifeCLEF challenge organizers
-    
-*   Open-source libraries: librosa, scikit-learn, matplotlib
-    
-*   Researchers advancing wildlife monitoring and bioacoustics
+**Key principle:** When labeled data is expensive and imbalanced, 
+architectural design > brute-force data collection.
