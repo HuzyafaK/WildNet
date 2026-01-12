@@ -10,7 +10,7 @@
 
 **BirdCLEF 2025 Challenge Results:**
 - **Score:** 0.705 ROC-AUC (macro-averaged, ignoring zero-positive classes)
-- **Rank:** Top 15% globally (76% of winning solution: 0.93)
+- **Rank:** 76% of winning solution: 0.93
 - **Key Innovation:** Architectural generalization > data engineering
 
 ### Performance Breakdown
